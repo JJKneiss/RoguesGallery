@@ -1,4 +1,4 @@
-let Title, Divider;
+
 class Validation
 {
     askQuestion(message)
@@ -71,10 +71,8 @@ class Validation
 }
 class Menu
 {
-    Menu(items)
+    constructor()
     {
-        Title = "Main Menu";
-        Divider = "===========================";
     }
     Formatting()
     {
