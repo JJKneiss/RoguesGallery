@@ -1,6 +1,18 @@
+let Title, Divider;
 class Validation
 {
     askQuestion(message)
+    {
+        let answer = prompt(message);
+        console.log(message);
+        while(!answer)
+        {
+            answer = prompt(message);
+        }
+        console.log("%c" + answer, "color : green");
+        return String(answer);
+    }
+    consQuest(message)
     {
         let answer = prompt(message);
         console.log(message);
@@ -61,14 +73,14 @@ class Menu
 {
     Menu(items)
     {
-        this.Title = "Main Menu";
-        this.Divider = "===========================";
+        Title = "Main Menu";
+        Divider = "===========================";
     }
     Formatting()
     {
         let utility = new Utility();
-        utility.ChangeCyan(Title+"\r\n");
-        console.log(Divider);
+        console.log(this.Title);
+        console.log(this.Divider);
     }
     NewTitle(newTitle)
     {

@@ -1,151 +1,250 @@
-let _dice;
-let _username;
-let _type;
-let _campaign;
-let _partySize;
-let _charName;
-let _charRace;
-let _charClass;
-let items = ["Create User", "View User", "Delete User", "Roll Dice"]
-//let menu = new Menu(items);
-let name, race, classes, message;
-
 const characters = [];
 const storedCharacters = localStorage.getItem("characters");
-//let valid = new Validation();
-class Assignment{
 
-    constructor(){
-        this.players = [];
-        this.dm = null;
-        this.adventurer = null;
-        this.players = new Array;
-        this._removeChar = false;
-        this.characters = new Array;
-        this._menu;
-    }
-    mainMenu(){
-        console.Clear();
-        // Create Main Menu & Display Options
-        this._menu = new Menu();
-        _menu.MaxDisplay();
-        // Prompt Choice
-        Select();
-    }
-    createPlayer(event){
-        event.preventDefault();
-        
+let _username, _type;
+let _campaign, _partySize;
+let _charName, _charRace, _charClass;
+let _players = [], items = ["Create User", "View User", "Delete User", "Roll Dice", "Save Data", "Exit"];
+let valid = new Validation(), util = new Utility(), menu = new Menu(items);
+let name, race, classes, message;
+let _adventurer, _dm;
+let _removeChar = false;
+class Assignment{
+    constructor(){}
+
+    mainMenu(items){   
         console.clear();
-        _menu.NewTitle("Create Player");
-        _username = askQuestion("Please enter a username: ", 1);
-        foreach (Player in this.players)
+        console.table(items);
+    }
+
+    select(){
+        let userSelection = valid.askQuestion("Make a selection:", 2).toLowerCase();
+        switch (userSelection)
         {
-            while (_username == player1.UserName){
-                _username = validation.ValidateString("It seems that username already exists\r\nPlease enter a username: ", 1);
+            case "0":
+            case "create":
+                assignment.createPlayer();
+                break;
+            case "1":
+            case "view":
+                assignment.characterList();                   
+                break;
+            case "2":
+                // Set _removeChar Track
+                _removeChar = true;
+                assignment.characterList();
+                break;
+            case "3":
+                assignment.rollDice();                    
+                break;
+            case "4":
+                assignment.saveData();
+                break;
+            case "5":
+                util.Goodbye("Goodbye");
+                break;
+            default:
+                valid.displayMessage("invalid option, please resubmit")
+                assignment.mainMenu(items);
+                break;
+        }
+    }
+
+    selectRace(race)
+    {
+        switch (race)
+        {
+            case "human":
+            case "Human":
+            case "1":
+                race = "Human";
+                break;
+            case "elf":
+            case "Elf":
+            case "2":
+                race = "Elf";
+                break;
+            case "dwarf":
+            case "Dwarf":
+            case "3":
+                race = "Dwarf";
+                break;
+            case "orc":
+            case "Orc":
+            case "4":
+                race = "Orc";
+                break;
+            default:
+                let  _race = valid.askQuestion("invalid option, please resubmit")
+                assignment.mainMenu(["Human", "Elf", "Dwarf", "Orc"]);
+                assignment.selectClass(_race);
+                break;
+        }
+        return race;
+    }
+
+    selectClass(cClass)
+        {
+            switch (cClass)
+            {
+                case "rogue":
+                case "Rogue":
+                case "0":
+                    cClass = "Rogue";
+                    break;
+                case "bard":
+                case "Bard":
+                case "1":
+                    cClass = "Bard";
+                    break;
+                case "wizard":
+                case "Wizard":
+                case "2":
+                    cClass = "Wizard";
+                    break;
+                case "fighter":
+                case "Fighter":
+                case "3":
+                    cClass = "Fighter";
+                    break;
+                default:
+                    let _class = valid.askQuestion("invalid option, please resubmit")
+                    assignment.mainMenu(["Human", "Elf", "Dwarf", "Orc"]);
+                    assignment.selectClass(_class);
+                    break;
             }
-        }
-        _type = validation.askQuestion("Are you a DM, or an Adventurer?: ", 1);
+            return cClass;
+    }
+
+    createPlayer(){      
+        console.clear();
+        console.log("%cCreate Player", "color:yellow");
+        console.log("--------------------")
+        //menu.NewTitle("Create Player");
+        _username = valid.askQuestion("Please enter a username: ", 1);
+        _players.forEach(element => {
+            while (_username == element.UserName){
+                _username = valid.askQuestion("It seems that username already exists\r\nPlease enter a username: ", 1);
+            }
+        });
+        _type = valid.askQuestion("Are you a DM, or an Adventurer?: ", 1);
         while (!(_type.toLowerCase() == "dm" || _type.toLowerCase() == "adventurer")) {
-            _type = validation.askQuestion("I'm sorry, that wasn't right. Please choose a type: DM or Adventurer: ", 1);
+            _type = valid.askQuestion("I'm sorry, that wasn't right. Please choose a type: DM or Adventurer: ", 1);
         }
-        if (_type.ToLower() == "dm"){
-            this._campaign = validation.ValidateString("What is your campaign name?: ", 1);
-            this._partySize = validation.Validatelet("How many adventurers are in your campaign?: ", 1);
-            this._dm = new DM(_username, _campaign, _partySize);
-            _players.Add(_dm);
+        if (_type.toLowerCase() == "dm"){
+            _campaign = valid.askQuestion("What is your campaign name?: ", 1);
+            _partySize = valid.askForNumber("How many adventurers are in your campaign?: ", 1);
+            _dm = new DM(_username, _campaign, _partySize);
+            _players.push(_dm);
         }
         else{
-            _charName = validation.askQuestion("What is your character's name?: ", 1);
-            let _menu = new Menu("Human", "Elf", "Dwarf", "Orc");
-            _menu.MinDisplay();
-            _charRace = validation.askQuestion("What is your character's race?: ", 1);
-            SelectRace(_charRace);
-            _menu = new Menu("Rogue", "Bard", "Wizard", "Fighter");
-            _menu.MinDisplay();
-            _charClass = validation.askQuestion("What is your character's class?: ", 1);
-            this.SelectClass(_charClass);
-            this._adventurer = new Adventurer(_username, _charName, _charRace, _charClass);
-            this.RollStats();
-            _players.Add(_adventurer);
+            _charName = valid.askQuestion("What is your character's name?: ", 1);
+            assignment.mainMenu(["Human", "Elf", "Dwarf", "Orc"]);
+            _charRace = valid.askQuestion("What is your character's race?: ", 1);
+            assignment.selectRace(_charRace);
+            assignment.mainMenu(["Rogue", "Bard", "Wizard", "Fighter"]);
+            _charClass = valid.askQuestion("What is your character's class?: ", 1);
+            assignment.selectClass(_charClass);
+            _adventurer = new Adventurer(_username, _charName, _charRace, _charClass);
+            assignment.rollStats();
+            _players.push(_adventurer);
+            _players.forEach(element => {
+                element
+            });
         }
-        MainMenu();
+        assignment.mainMenu(items);
     }
+    
     rollStats()
     {
-        _dice = new Adventurer(_username);
+        _adventurer = new Adventurer(_username, _charName, _charRace, _charClass);
         console.log("Let's roll your stats.");
         let stats = [];
-        let strength = _dice.StatRoll();        
+        let strength = statRoll();        
         stats.push(strength);
-        let dexterity = _dice.StatRoll();
+        let dexterity = statRoll();
         stats.push(dexterity);
-        let constitution = _dice.StatRoll();
+        let constitution = StatRoll();
         stats.push(constitution);
-        let wisdom = _dice.StatRoll();
+        let wisdom = StatRoll();
         stats.push(wisdom);
-        let intelligence = _dice.StatRoll();
+        let intelligence = StatRoll();
         stats.push(intelligence);
-        let charisma = _dice.StatRoll();
+        let charisma = StatRoll();
         stats.push(charisma);
-        this._adventurer.CharStats = stats;
+        _adventurer.CharStats = stats;
+        console.table(_adventurer.CharStats);
     }
-    displayCharacter()
+
+    statRoll()
+        {
+            Math.floor((Math.random() * 6) + 1);
+            let roll = 0;
+            // Roll 4 D6 (6 Sided) Dice To find Each Stat
+            for (let i = 0; i < 4; i++)
+            {
+                roll += Math.floor((Math.random() * 6) + 1);
+            }
+            return roll;
+        }
+
+    characterList()
     {
-        let validation = new Validation();
-        if (_players.Count == 0){
-            let utility = new Utility();
-            utility.Feedback("You must first add a player.", 1);
-            menu.MainMenu();
+        if (_players.length == 0){
+            valid.displayMessage("You must first push a player");
+            assignment.mainMenu();
         }
         else
         {
-            _players.Sort();
-            Console.Clear();
+            _players.sort();
+            console.clear();
             if (_removeChar == true)
             {
-                _menu.NewTitle("Remove Player");
+                menu.NewTitle("Remove Player");              
             }
             else
             {
-                _menu.NewTitle("Display Character");
+                menu.NewTitle("Display Character");
             }
             console.log();
             let x = 1;
-            foreach (Player in this.players)
-            {
-                this.CreateAdventurer();
-                let utility = new Utility();
-                utility.ChangeCyan("[{x}]: ");
-                utility.Feedback(`${ "User Name:",-15}`, 3);
-                validation.displayMessage(` ${player.userName,-12}`, console.ForegroundColor = consoleColor.DarkMagenta);
-                utility.Feedback("Account Type:", 3);
-                if (Player === DM)
+            _players.push
+            _players.forEach(element => {
+                console.table(element)
+                console.log(`[${x}]: `);
+                util.Feedback(`${ "User Name:",-15}`, 3);           
+                valid.displayMessage(` ${player.userName,-12}`, console.ForegroundColor = consoleColor.DarkMagenta);
+                util.Feedback("Account Type:", 3);
+                if (element === DM)
                 {
-                    Utility.Feedback(`${player.UserType,-12}\r\n`, 1);
+                    util.Feedback(`${player.UserType,-12}\r\n`, 1);
                 }
                 else
                 {
-                    Utility.Feedback(`${player.UserType,-12}\r\n`, 2);
+                    util.Feedback(`${player.UserType,-12}\r\n`, 2);
                 }
                 x++;
-            }
-            let info = validation.askQuestion("Which player you like more information on?: ");
+            });
+            let info = valid.askForNumber("Which player you like more information on?: ");
             while (info < 1 || info > _players.Count)
             {
-                info = validation.askForNumber(`Please choose a valid number between 1 and ${_players.Count}`);
+                info = valid.askForNumber(`Please choose a valid number between 1 and ${_players.Count}`);
             }
             info -= 1;
-            if (players[info]  == Adventurer)
+            if (_players[info] === Adventurer)
             {
-                Utility.Feedback("Character Info\r\n", 3);
-                console.log(`${"Name:",-14} ${(Adventurer).CharName}`);
-                console.log(`${"Race:", -14} ${(Adventurer).Race}`);
+                util.Feedback("Character Info\r\n", 3);
+                console.log(`${"Name:",-14} ${players[info].CharName}`);
+                console.log(`${"Race:", -14} ${players[info].Race}`);
                 console.log(`${"Class:", -14} ${(Adventurer).Class}`);
-                Utility.Feedback("Stats\r\n", 3);
-                foreach(KeyValuePair<string,int> kvp in this.adventurer.CharStats)
+                util.Feedback("Stats\r\n", 3);
+                foreach(KeyValuePair<string,int> kvp in assignment._adventurer.CharStats)
                 {
                     console.log(`${kvp.Key+":", -14} ${kvp.Value}`);
                 }
+                assignment._adventurer.CharStats.forEach(element => {
+                    
+                });
             }
             else if (_players[info] == DM)
             {
@@ -162,26 +261,34 @@ class Assignment{
         }
         _removeChar = false;
     }
+
     removeCharacter()
     {
-        console.Clear();
+        console.clear();
         _removeChar = true;
-        DisplayCharacter();
-
-        let remove = Validation.ValidateInt("Choose a player to remove.", 0);
-
+        characterList();
+        let remove = valid.askForNumber("Choose a player to remove.", 0);
         while (remove > _players.Count || remove < 1)
         {
-            Utility.Feedback("No such player", 1);
-            remove = Validation.ValidateInt("Choose a player to remove.", 0);
+            util.Feedback("No such player", 1);
+            remove = valid.askForNumber("Choose a player to remove.", 0);
         }
         remove -= 1;
-        Utility.Feedback(`${this.players[remove]._username} has been deleted\r\n`, 2);
-        Utility.Feedback(`${_players[remove].UserName}: {_players[remove].Quit()}`, 1);
+        util.Feedback(`${this.players[remove]._username} has been deleted\r\n`, 2);
+        util.Feedback(`${_players[remove].UserName}: {_players[remove].Quit()}`, 1);
+        _players.
         _players.RemoveAt(remove);
         Thread.Sleep(750);
         MainMenu();
     }
+}
+class DOMStuff{
+    startAll(event){
+        event.preventDefault();
+        assignment.mainMenu(items);
+        assignment.select();
+    }
+
     createCharacter(event){
         event.preventDefault();
         name = document.getElementById("name").value;
@@ -196,6 +303,20 @@ class Assignment{
         console.log(message);
         console.log(localStorage.storedCharacters);
     }
+
+    viewCharacter(event){
+        event.preventDefault();
+        console.table(storedCharacters);
+        let stingArr = storedCharacters.split(",");
+        stingArr.forEach(element => {
+            element = element.replace("[", "");
+            element = element.replace("]", "");
+            element = element.replace("{", "");
+            element = element.replace("}", "");
+            console.log(element);
+        });
+    }
+
     diceRoll(event)
     {
         event.preventDefault();
@@ -209,30 +330,32 @@ class Assignment{
         die2.innerHTML = d2;
         status.innerHTML = `You rolled ${diceTotal}.`;
     }
-    viewCharacter(){
-        console.log("   FULL SPEEEEEEEED");
-        console.table(storedCharacters);
-        
-    }
 }
 //LISTEN FOR EVENTS
 let assignment =  new Assignment();
+let domStuff = new DOMStuff();
 
+// Listen for Console Start Click
+const startButton = document.getElementById("start");
+if(startButton){
+    console.log(startButton);
+    startButton.addEventListener("click", domStuff.startAll);
+}
+// Listen for Character Submission Click
 const createButton = document.getElementById("submitForm");
 if(createButton){
-    //el.addEventListener('click', swapper, false);
     console.log(createButton);
-    createButton.addEventListener("click", assignment.createCharacter);
+    createButton.addEventListener("click", domStuff.createCharacter);
   }
+// Listen for Dice Roll Click
 const rollButton = document.getElementById("rollDice");
-if(rollButton)
-{
+if(rollButton){
     console.log(rollButton);
-    rollButton.addEventListener("click", assignment.diceRoll);
+    rollButton.addEventListener("click", domStuff.diceRoll);
 }
+// Listen for View Characters Click
 const viewButton = document.getElementById("view")
-if(viewButton)
-{
+if(viewButton){
     console.log(viewButton);
-    viewButton.addEventListener("click", assignment.createPlayer);
+    viewButton.addEventListener("click", domStuff.viewCharacter);
 }
