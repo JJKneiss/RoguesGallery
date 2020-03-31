@@ -7,22 +7,22 @@
   --bg-primary: #23232e;
   --bg-secondary: #141418;
 }
-body
-{
+body{
   background-color: #242424; 
   background-repeat:no-repeat; 
   background-image: url(assets/images/home.png); 
   background-position: center;
 }
-div
-{
+form{
+  background-color: wheat;
+}
+div{
   text-align: center; 
   font-size: 24x;
    margin: 0px; 
    padding: 0px;
 }
-select
-{
+select{
   background-color: cadetblue;
   border-radius: 15%;
   padding: 16px;
@@ -30,18 +30,15 @@ select
   border: none;
   border-radius: 10%;
 }
-select:hover
-{
+select:hover{
   background-color: burlywood;
   opacity: .33;
 }
 select:active
 {
   background-color: burlywood;
-  opacity: .33;
 }
-button
-{
+button{
   background-color:#2D5D5F;
   color: white;
   border-radius: 15%;
@@ -50,68 +47,83 @@ button
   border: none;
   border-radius: 20%;
 }
-button:hover
-{
+button:hover{
   color: cornsilk !important;
   background-color: cadetblue !important;
 }
-h1
-{
+h1{
   color: black;
   font-size: 48px;
   font-family: 'Oxanium', cursive;
 }
-h1-color
-{
+h1-color{
   color: #2D5D5F;
   font-size: 48px;
   font-family: 'Oxanium', cursive;
 }
-h2
-{
+h2{
   text-align: center;
   color: #707070;
   font-size: 24px;
   font-family: 'Oxanium', cursive;
 }
-h2-color
-{
+h2-color{
   text-align: center;
   color: #905442;
   font-size: 24px;
   font-family: 'Oxanium', cursive;
 }
-p 
-{
+p{
   font-family: verdana;
   font-size: 20px;
 }
-.center
-{
+ul{
+  list-style-type: none;  
+  margin: 0;
+  padding: 0;
+  display: inline-block;  
+  text-align: center;
+}
+li{
+  font-size: 24px;
+  margin: 25px;
+  color: black;
+  display: inline-block;
+  background: none;
+  border: none;
+  text-decoration: none;
+  color: cornsilk;
+}
+a, a:active, a:hover, a:visited a:link{
+  color:black !important;
+  text-decoration: none;
+}
+a:hover{
+  color: cornsilk !important;
+  background-color: cadetblue !important;
+}
+.center{
   margin: auto;
   width: 45%;
   border: 3px solid green;
   padding: 10px;
   text-align: center;
 }
-.left
-{
+.left{
   margin: auto;
   width: 45%;
   border: 3px solid green;
   padding: 10px;
   text-align: left;
 }
-.right
-{
+.right{
   margin: auto;
   width: 45%;
   border: 3px solid green;
   padding: 10px;
   text-align: right;
 }
-.nav
-{
+.nav{
   border:1px solid #ccc;
   border-width:1px 0;
   list-style:none;
@@ -123,13 +135,11 @@ p
 {
   display:inline;
 }
-.nav a
-{
+.nav a{
   display:inline-block;
   padding:10px;
 }
-#footer 
-{
+#footer{
   position: fixed;
   align-content: center;
   text-align: center;
@@ -140,44 +150,19 @@ p
   height: 12%;
   background-color:#707070;
 }
-#header
-{  
+#header{  
   position: fixed;
+  position: sticky;
   align-content: center;
   text-align: center;
+  text-align: center; 
+  padding-top: 1px; 
+  margin-top: 0px;
   top: 0 !important;
   left: 0;
   right: 0;
   width: 100%;
   height: 12%;
+  padding-bottom: 75px;
   background-color: #333333;
-}
-
-a, a:active, a:hover, a:visited a:link
-{
-  color:black !important;
-  text-decoration: none;
-}
-a:hover{
-  color: cornsilk !important;
-  background-color: cadetblue !important;
-}
-ul
-{
-  list-style-type: none;  
-  margin: 0;
-  padding: 0;
-  display: inline-block;  
-  text-align: center;
-}
-li 
-{
-  font-size: 24px;
-  margin: 25px;
-  color: black;
-  display: inline-block;
-  background: none;
-  border: none;
-  text-decoration: none;
-  color: cornsilk;
 }
